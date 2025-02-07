@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { fetchCharacters, Character } from "./api/fetchCharacters";
+import Image from "next/image";
 
 export default function Home() {
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const totalPages = 42;
 
@@ -15,6 +16,7 @@ export default function Home() {
         const data: Character[] = await fetchCharacters(page);
         setCharacters(data);
       } catch (error) {
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
@@ -41,7 +43,7 @@ export default function Home() {
         {characters &&
           characters.map((val, index) => (
             <div key={index} className="shadow-lg rounded-lg p-4 text-center">
-              <img src={val.image} alt={val.name} />
+              <Image src={val.image} alt={val.name} />
               <h3 className="text-lg font-semibold mt-2">{val.name}</h3>
             </div>
           ))}

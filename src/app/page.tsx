@@ -2,17 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { fetchCharacters, Character } from "./api/fetchCharacters";
+import { useSearchParams, usePathname } from "next/navigation";
+import clsx from "clsx";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 export default function Home() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(1);
   const totalPages = 42;
 
   useEffect(() => {
     const getCharacters = async () => {
       try {
-        const data: Character[] = await fetchCharacters(page);
+        const data: Character[] = await fetchCharacters(currentPage);
         setCharacters(data);
       } catch (error) {
         console.log(error);
@@ -22,16 +29,15 @@ export default function Home() {
     };
 
     getCharacters();
-  }, [page]);
+  }, [currentPage]);
 
-  const handlePrev = () => {
-    setPage((currentPage) => currentPage - 1);
-  };
-  const handleNext = () => {
-    setPage((currentPage) => currentPage + 1);
+  const createPageURL = (pageNumber: number | string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div className="text-center">Loading...</div>;
 
   return (
     <div className="container mx-auto p-5">
@@ -49,23 +55,59 @@ export default function Home() {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center gap-4 mt-6">
-        <button
-          onClick={handlePrev}
-          disabled={page === 1}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          prev
-        </button>
-        <div>page {page} </div>
-        <button
-          onClick={handleNext}
-          disabled={page === totalPages}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-        >
-          next
-        </button>
+      <div className="mt-5 flex w-full justify-center">
+        <div className="inline-flex">
+          <PaginationArrow
+            direction="left"
+            href={createPageURL(currentPage - 1)}
+            isDisabled={currentPage <= 1}
+          />
+
+          <div className="flex -space-x-px px-4 py-2">
+            Page {currentPage} of {totalPages}
+          </div>
+          <PaginationArrow
+            direction="right"
+            href={createPageURL(currentPage + 1)}
+            isDisabled={currentPage >= totalPages}
+          />
+        </div>
       </div>
     </div>
+  );
+}
+
+function PaginationArrow({
+  href,
+  direction,
+  isDisabled,
+}: {
+  href: string;
+  direction: "left" | "right";
+  isDisabled?: boolean;
+}) {
+  const className = clsx(
+    "flex h-10 w-10 items-center justify-center rounded-md border",
+    {
+      "pointer-events-none text-gray-300": isDisabled,
+      "hover:bg-gray-100": !isDisabled,
+      "mr-2 md:mr-4": direction === "left",
+      "ml-2 md:ml-4": direction === "right",
+    }
+  );
+
+  const icon =
+    direction === "left" ? (
+      <ArrowLeftIcon className="w-4" />
+    ) : (
+      <ArrowRightIcon className="w-4" />
+    );
+
+  return isDisabled ? (
+    <div className={className}>{icon}</div>
+  ) : (
+    <Link className={className} href={href}>
+      {icon}
+    </Link>
   );
 }

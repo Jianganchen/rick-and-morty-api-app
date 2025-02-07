@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { fetchCharacters, Character } from "./api/fetchCharacters";
-import Image from "next/image";
 
 export default function Home() {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -43,7 +42,7 @@ export default function Home() {
         {characters &&
           characters.map((val, index) => (
             <div key={index} className="shadow-lg rounded-lg p-4 text-center">
-              <Image src={val.image} alt={val.name} />
+              <img src={val.image} alt={val.name} />
               <h3 className="text-lg font-semibold mt-2">{val.name}</h3>
             </div>
           ))}

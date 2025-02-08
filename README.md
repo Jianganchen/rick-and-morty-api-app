@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Rick and Morty Character Web App
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app) that fetches and displays characters from the [Rick and Morty API](https://rickandmortyapi.com/api/character). It supports **pagination** and allows users to navigate through different pages while persisting the page state in the URL.
+
+## Tech Stack
+
+- Next.js (React Framework)
+- TypeScript
+- Tailwind CSS (Styling)
+- Rick and Morty API (Public API)
+- Next.js Router
 
 ## Getting Started
 

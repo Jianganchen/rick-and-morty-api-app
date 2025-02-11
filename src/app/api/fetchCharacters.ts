@@ -1,4 +1,5 @@
 export interface Character {
+  id: string;
   name: string;
   image: string;
 }
@@ -14,7 +15,11 @@ export const fetchCharacters = async (page: number): Promise<Character[]> => {
     );
     const data: APIresponse = await res.json();
 
-    const characters = data.results.map(({ name, image }) => ({ name, image }));
+    const characters = data.results.map(({ id, name, image }) => ({
+      id,
+      name,
+      image,
+    }));
     return characters;
   } catch (error) {
     console.log(error);

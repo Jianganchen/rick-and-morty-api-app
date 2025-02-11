@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface Character {
@@ -62,12 +63,12 @@ const CharacterPage = async (props: { params: Promise<{ id: string }> }) => {
         </p>
       </div>
 
-      <a
+      <Link
         href="/"
         className="mt-6 inline-block px-4 py-2 bg-blue-500 text-white rounded-lg"
       >
         Back to Home
-      </a>
+      </Link>
     </div>
   );
 };
